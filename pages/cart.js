@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useContext } from "react";
 
+
 function cart() {
   const router = useRouter();
   const { state, dispatch } = useContext(Store);

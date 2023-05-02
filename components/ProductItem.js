@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-function ProductItem({ product }) {
+function ProductItem({ product}) {
   return (
     <>
       <div class="grid gap-4">
@@ -23,6 +23,7 @@ function ProductItem({ product }) {
             </Link>
             <div className="absolute text-2xl text-blue-300 top-2 right-1  opacity-0 group-hover:opacity-100">
               <button
+               
                 type="button"
                 className="text-white hover:text-gray-800 hover:bg-white focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-full text-sm px-5 py-2 mr-2 mb-2 border-2 border-white"
               >

@@ -1,7 +1,6 @@
 import { useContext, useState } from "react";
 import classNames from "classnames";
 import { useRouter } from "next/router";
-import { Store } from "@/utils/Store";
 import { useForm } from "react-hook-form";
 import dynamic from "next/dynamic";
 import Link from "next/link";
@@ -54,7 +53,7 @@ const Login = () => {
     <div className=" ">
       <button
         type="button"
-        className="focus:outline-none bg-gray-100 border-gray-300 border transition duration-150 ease-in-out hover:bg-gray-300 rounded text-gray-600  py-2 text-xs"
+        className="focus:outline-none bg-gray-100 border-gray-300 border transition duration-150 ease-in-out hover:bg-gray-300 rounded text-gray-600  py-2 px-3 text-xs"
         onClick={toggleMenu}
       >
         Login
@@ -130,7 +129,7 @@ const Login = () => {
               <button className="text-lg ">Login</button>
               <div className="mb-4 ">
                 Don&apos;t have an account? &nbsp;
-                <Link href="/register">Register</Link>
+                <Link href={`/signup?redirect=${redirect || '/'}`}>Signup</Link>
               </div>
             </div>
           </form>
