@@ -4,40 +4,45 @@ import { Store } from "@/utils/Store";
 import data from "@/utils/data";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import React, { useContext, useState } from "react";
-
+import React, { useContext, useEffect, useState } from "react";
+import { getServerSideProps } from "@/utils/fetchProducts";
 
 function ProductScreen() {
-  const { state, dispatch } = useContext(Store);
+  const { state, dispatch, products, setProducts } = useContext(Store);
   const [show, setShow] = useState(false);
   const [show2, setShow2] = useState(false);
   const { query } = useRouter();
   const { slug } = query;
-  const product = data.products.find((x) => x.slug === slug);
-  if (!product) {
+  useEffect(() => {
+    getServerSideProps().then((res) => {
+      setProducts(res);
+    });
+  }, []);
+  const clickedProduct = products?.find((x) => x.slug === slug);
+  if (!clickedProduct) {
     return <div>Produt Not Found</div>;
   }
 
   const addToCartHandler = () => {
-    const existItem = state.cart.cartItems.find((x) => x.slug === product.slug);
+    const existItem = state.cart.cartItems.find((x) => x.slug === clickedProduct.slug);
     const quantity = existItem ? existItem.quantity + 1 : 1;
 
-    if (product.countInStock < quantity) {
+    if (clickedProduct.countInStock < quantity) {
       alert("Sorry. Product is out of stock");
       return;
     }
 
-    dispatch({ type: "CART_ADD_ITEM", payload: { ...product, quantity } });
+    dispatch({ type: "CART_ADD_ITEM", payload: { ...clickedProduct, quantity } });
   };
 
   return (
     <>
-      <Layout title={product.name}>
+      <Layout title={clickedProduct.name}>
         <div className="md:flex items-start justify-center py-10 2xl:px-40 md:px-6 px-4 mt-16">
           <div className="xl:w-2/6 lg:w-2/5 w-80 md:block hidden">
             <Image
-              src={product.image}
-              alt={product.name}
+              src={clickedProduct.image}
+              alt={clickedProduct.name}
               width={600}
               height={0}
               className="rounded-lg"
@@ -45,8 +50,8 @@ function ProductScreen() {
           </div>
           <div className="md:hidden">
             <Image
-              src={product.image}
-              alt={product.name}
+              src={clickedProduct.image}
+              alt={clickedProduct.name}
               width={500}
               height={0}
               className="rounded-lg"
@@ -66,7 +71,7 @@ function ProductScreen() {
 							mt-2
 						"
                 >
-                  {product.name}
+                  {clickedProduct.name}
                 </h1>
               </div>
               <div className="">
@@ -83,7 +88,7 @@ function ProductScreen() {
               <p className="text-base leading-4 text-gray-800">Category</p>
               <div className="flex items-center justify-center">
                 <p className="text-sm leading-none text-gray-600 mr-5">
-                  {product.category}
+                  {clickedProduct.category}
                 </p>
               </div>
             </div>
@@ -92,26 +97,26 @@ function ProductScreen() {
               <div className="flex items-center justify-center">
                 <p className="text-sm leading-none text-gray-600 mr-7">
                   {" "}
-                  {product.brand}{" "}
+                  {clickedProduct.brand}{" "}
                 </p>
               </div>
             </div>
 
             <div>
               <p className="xl:pr-48 text-base lg:leading-tight leading-normal text-blue-600 mt-7">
-                {product.description}
+                {clickedProduct.description}
               </p>
               <p className="text-base leading-4 mt-7 text-gray-600">
                 <span className="font-semibold text-gray-900"> Rating : </span>{" "}
-                {product.rating}
+                {clickedProduct.rating}
               </p>
               <p className="text-base leading-4 mt-4 text-gray-600">
                 <span className="font-semibold text-gray-900"> Reviews : </span>{" "}
-                {product.numReviews}
+                {clickedProduct.numReviews}
               </p>
               <p className="text-base leading-4 mt-4 text-gray-600">
                 <span className="font-semibold text-gray-900"> Status : </span>
-                {product.countInStock > 0 ? "In stock" : "Unavailable"}
+                {clickedProduct.countInStock > 0 ? "In stock" : "Unavailable"}
               </p>
             </div>
             <div>
@@ -223,7 +228,7 @@ function ProductScreen() {
             More like this
           </p>
           <div class="grid grid-cols-2 md:grid-cols-6 gap-6">
-            {data.products.map((product) => (
+            {products.map((product) => (
               <ProductItem product={product} key={product.slug}></ProductItem>
             ))}
           </div>
