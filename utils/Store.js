@@ -1,5 +1,5 @@
 import Cookies from "js-cookie";
-import { createContext, useReducer } from "react";
+import { createContext, useReducer, useState } from "react";
 
 export const Store = createContext();
 
@@ -47,7 +47,8 @@ function reducer(state, action) {
 }
 
 export function StoreProvider({ children }) {
+  const [products, setProducts] = useState([]);
   const [state, dispatch] = useReducer(reducer, initialState);
-  const value = { state, dispatch };
+  const value = { state, dispatch,products, setProducts };
   return <Store.Provider value={value}>{children}</Store.Provider>;
 }

@@ -1,13 +1,14 @@
 import mongoose from "mongoose";
+// const mongoose = require('mongoose')
 
 const connection = {};
-
+let db ;
 async function connect() {
   if (connection.isConnected) {
     console.log("already connected");
     return;
   }
-  if (mongoose.connections.length > 0) {
+  if (mongoose?.connections?.length > 0) {
     connection.isConnected = mongoose.connections[0].readyState;
     if (connection.isConnected === 1) {
       console.log("use previous connection");
@@ -15,7 +16,11 @@ async function connect() {
     }
     await mongoose.disconnect();
   }
-  const db = await mongoose.connect(process.env.MONGODB_URI);
+ 
+  const db = await mongoose.connect(process.env.MONGODB_URI, {
+      useNewUrlParser: true,
+    });
+
   console.log("new connection");
   connection.isConnected = db.connections[0].readyState;
 }
@@ -38,6 +43,4 @@ function convertDocToObj(doc) {
   return doc;
 }
 
-
-const db = { connect, disconnect, convertDocToObj };
-export default db;
+export default db = { connect, disconnect, convertDocToObj };
